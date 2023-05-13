@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search App</title>
+    <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Movie Search</h1>
+        <input type="text" id="searchInput" class="search-input" placeholder="Enter a movie title" />
+        <button id="searchButton" class="search-button">Search</button>
+        <div id="resultsContainer" class="search-results"></div>
+      </div>
+      <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+  
+        searchButton.addEventListener('click', searchMovies);
+  
+        function searchMovies() {
+          const searchTerm = searchInput.value;
+          fetch(`https://www.omdbapi.com/?apikey=3192a3d5&s=${searchTerm}`)
+          .then(response => response.json())
+          .then(data => {
+            // Process the data and generate HTML
+            const movies = data.Search;
+            const html = movies.map(movie => `
+              <div class="movie-card">
+                <img src="${movie.Poster}" alt="Movie Poster" />
+                <div>
+                  <h2>${movie.Title}</h2>
+                  <p>${movie.Plot}</p>
+                  <p>Released: ${movie.Year}</p>
+                  <p>IMDB Rating: ${movie.imdbRating}</p>
+                </div>
+              </div>
+            `).join('');
+            resultsContainer.innerHTML = html;
+          })
+          .catch(error => console.log(error));
+      }
+      </script>
+</body>
+</html>
